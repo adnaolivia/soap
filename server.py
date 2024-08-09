@@ -1,5 +1,5 @@
 from spyne import Application, rpc, ServiceBase, Unicode, Integer
-from spyne.protocol.soap import soap11
+from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 from wsgiref.simple_server import make_server
 import random
@@ -11,7 +11,7 @@ class HotelService(ServiceBase):
         print(f"reserva criada para {nomeCliente} no quarto {tipoQuarto}. número de confirmação: {numero_confirmacao}")
         return numero_confirmacao
 
-aplicacao = Application([HotelService], tns='spyne.reserva_hotel', in_protocol=soap11(), out_protocol=soap11()) # tns - namespace do destino
+aplicacao = Application([HotelService], tns='spyne.reserva_hotel', in_protocol=Soap11(), out_protocol=Soap11()) # tns - namespace do destino
 
 aplicacao_wsgi = WsgiApplication(aplicacao)
 
