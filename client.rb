@@ -8,6 +8,7 @@ client = Savon.client(wsdl: wsdl_url)
 
 # Chama o método 'reserve' do serviço SOAP
 response = client.call(:fazer_reserva, message: { nomeCliente: 'João SOPA', tipoQuarto: 'Solteiro' }) # rpc -> Unicode
-
+response_body = response.body
 # Exibe a resposta
-puts "numero de confirmacao: #{response.body[:reserve_response][:return]}"
+confirmation_number = response.body[:fazer_reserva_response][:fazer_reserva_result]
+puts "numero de confirmacao: #{confirmation_number}"
