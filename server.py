@@ -1,26 +1,21 @@
-from spyne import Application, rpc, ServiceBase, Integer
-from spyne.protocol.soap import Soap11
+from spyne import Application, rpc, ServiceBase, Unicode, Integer
+from spyne.protocol.soap import soap11
 from spyne.server.wsgi import WsgiApplication
 from wsgiref.simple_server import make_server
+import random
 
-class CalculadoraService(ServiceBase):
+class HotelService(ServiceBase):
+    @rpc(Unicode, Unicode, _returns=Unicode)
+    def fazer_reserva(contexto, nomeCliente, tipoQuarto):
+        numero_confirmacao = f"CONF-{random.randint(1000, 9999)}"
+        print(f"reserva criada para {nomeCliente} no quarto {tipoQuarto}. número de confirmação: {numero_confirmacao}")
+        return numero_confirmacao
 
-    # O decorador @rpc é o mecanismo pelo qual você define as operações SOAP no Spyne. especifica os tipos de dados de entrada e saída
-    @rpc(Integer, Integer, _returns=Integer) # @rps -> operacao soap; pode ser invocado por clientes
-    def soma(contexto, a, b): # contexto: contém informações sobre a solicitação, como cabeçalhos HTTP, detalhes da mensagem SOAP
-        return a + b
+aplicacao = Application([HotelService], tns='spyne.reserva_hotel', in_protocol=soap11(), out_protocol=soap11()) # tns - namespace do destino
 
-    @rpc(Integer, Integer, _returns=Integer)
-    def subtracao(contexto, a, b):
-        return a - b
-
-# cria a aplicação
-aplicacao = Application([CalculadoraService], tns='spyne.exemplo.calculadora', in_protocol=Soap11(), out_protocol=Soap11()) # tns= namespace de destindo
-
-# servidor WSGI
 aplicacao_wsgi = WsgiApplication(aplicacao)
 
 if __name__ == '__main__':
-    server = make_server('localhost', 8000, aplicacao_wsgi) # cria o servidor
-    print("Servidor SOAP rodando na porta 8000 :)")
+    server = make_server('localhost', 8000, aplicacao_wsgi)
+    print("Servidor SABAO rodando :)")
     server.serve_forever()
