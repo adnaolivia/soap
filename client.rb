@@ -6,7 +6,7 @@ wsdl_url = 'http://localhost:8000/soap?wsdl'
 # Cria o cliente SOAP
 client = Savon.client(wsdl: wsdl_url)
 
-# Chama o método 'reserve' do serviço SOAP
+# Chama o método 'fazer_reserva' do serviço SOAP
 response = client.call(:fazer_reserva, message: { nomeCliente: 'João SOPA', tipoQuarto: 'Solteiro' }) # rpc -> Unicode
 response_body = response.body
 # Exibe a resposta
